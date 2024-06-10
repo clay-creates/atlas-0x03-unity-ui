@@ -14,14 +14,16 @@ public class PlayerController : MonoBehaviour
     public float speed = 20; // Speed of player
     private int score = 0; // Amount of coins that player has collected
     public int health = 5; // Player health
-    public Text scoreText; // ScoreText variable to set in inspector
+    public Text scoreText; // ScoreText to update as player collects coins
+    public Text healthText; // HealthText to update when player loses health
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>(); // Get and store RigidBody component
 
-        scoreText = GameObject.Find("ScoreText").GetComponent<Text>(); // get scoreText from gameObject
+        scoreText = GameObject.Find("ScoreText").GetComponent<Text>(); // get scoreText gameObject
+        healthText = GameObject.Find("HealthText").GetComponent<Text>(); // get HealthText gameObject
     }
 
     void OnMove(InputValue movementValue) // Called when movement is detected
@@ -63,7 +65,8 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Trap")) // Checks for Trap tag
         {
             health--; // Decrement health
-            Debug.Log($"Health: {health}"); // Print new health
+            SetHealthText();
+            // Debug.Log($"Health: {health}"); // Print new health
         }
 
         if (other.gameObject.CompareTag("Goal")) // Checks for Goal tag
@@ -77,6 +80,14 @@ public class PlayerController : MonoBehaviour
         if (scoreText != null)
         {
             scoreText.text = $"Score: {score}";
+        }
+    }
+
+    void SetHealthText()
+    {
+        if (healthText != null)
+        {
+            healthText.text = $"Health: {health}";
         }
     }
 }
