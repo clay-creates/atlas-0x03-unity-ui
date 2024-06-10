@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public int health = 5; // Player health
     public Text scoreText; // ScoreText to update as player collects coins
     public Text healthText; // HealthText to update when player loses health
+    public GameObject WinLoseBG;
+    public Text WinLoseText;
 
     // Start is called before the first frame update
     void Start()
@@ -43,10 +45,36 @@ public class PlayerController : MonoBehaviour
     {
         if (health == 0)
         {
-            Debug.Log("Game Over!");
-            SceneManager.LoadScene("maze");
+            if (WinLoseText != null)
+            {
+                WinLoseText.GetComponent<Text>().text = "Game Over!"; // Set Victory text to display
+                WinLoseText.GetComponent<Text>().color = Color.white; // Change Text Color
+            }
+            else
+            {
+                Debug.Log("WinLoseText not found.");
+            }
+
+            if (WinLoseBG != null)
+            {
+                WinLoseBG.GetComponent<Image>().color = Color.red;
+                WinLoseBG.SetActive(true);
+            }
+            else
+            {
+                Debug.Log("WinLoseBG not found.");
+            }
+            // Debug.Log("Game Over!");
+            // SceneManager.LoadScene("maze");
             score = 0;
             health = 5;
+
+            StartCoroutine(LoadScene(3));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("menu");
         }
     }
 
@@ -71,7 +99,30 @@ public class PlayerController : MonoBehaviour
 
         if (other.gameObject.CompareTag("Goal")) // Checks for Goal tag
         {
-            Debug.Log("You win!"); // Prints victory message
+            // Debug.Log("You win!"); // Prints victory message
+
+            if (WinLoseText != null)
+            {
+                WinLoseText.GetComponent<Text>().text = "You win!"; // Set Victory text to display
+                WinLoseText.GetComponent<Text>().color = Color.black; // Change Text Color
+            }
+            else
+            {
+                Debug.Log("WinLoseText not found.");
+            }
+
+            if (WinLoseBG != null)
+            {
+                WinLoseBG.GetComponent<Image>().color = Color.green;
+                WinLoseBG.SetActive(true);
+            }
+            else
+            {
+                Debug.Log("WinLoseBG not found.");
+            }
+
+            StartCoroutine(LoadScene(3));
+
         }
     }
 
@@ -79,7 +130,7 @@ public class PlayerController : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = $"Score: {score}";
+            scoreText.text = $"Score: {score}"; // Set ScoreText
         }
     }
 
@@ -87,7 +138,13 @@ public class PlayerController : MonoBehaviour
     {
         if (healthText != null)
         {
-            healthText.text = $"Health: {health}";
+            healthText.text = $"Health: {health}"; // Set HealthText
         }
+    }
+
+    IEnumerator LoadScene(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        SceneManager.LoadScene("maze");
     }
 }
