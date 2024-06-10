@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,11 +14,14 @@ public class PlayerController : MonoBehaviour
     public float speed = 20; // Speed of player
     private int score = 0; // Amount of coins that player has collected
     public int health = 5; // Player health
+    public Text scoreText; // ScoreText variable to set in inspector
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>(); // Get and store RigidBody component
+
+        scoreText = GameObject.Find("ScoreText").GetComponent<Text>(); // get scoreText from gameObject
     }
 
     void OnMove(InputValue movementValue) // Called when movement is detected
@@ -52,7 +56,8 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false); // Disables / Destroys object
             score++; // Increment score
-            Debug.Log($"Score: {score}"); // Print updated score to console
+            SetScoreText();
+            //  Debug.Log($"Score: {score}"); // Print updated score to console
         }
 
         if (other.gameObject.CompareTag("Trap")) // Checks for Trap tag
@@ -64,6 +69,14 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Goal")) // Checks for Goal tag
         {
             Debug.Log("You win!"); // Prints victory message
+        }
+    }
+
+    void SetScoreText()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = $"Score: {score}";
         }
     }
 }
